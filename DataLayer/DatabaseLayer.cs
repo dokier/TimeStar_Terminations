@@ -25,8 +25,8 @@ namespace DataLayer
                 IntegratedSecurity = false,
                 //MultipleActiveResultSets = false,
                 //PersistSecurityInfo = true,
-                UserID = "infradba_account",
-                Password = "~All4114All!"
+                UserID = "sql_account",
+                Password = "password"
             };
 
             return builder.ConnectionString;
