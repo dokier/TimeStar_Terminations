@@ -43,7 +43,13 @@ namespace TimeStar_Terminations
             InitializeComponent();
             checkAll_chkBox.Visible = false;
             //Add Headers
+            AddColumns();
+            
 
+        }
+
+        private void AddColumns()
+        {
             dataTable1.Columns.Add("ServerName");
             dataTable1.Columns.Add("DatabaseName");
             dataTable1.Columns.Add("ReadOnly");
@@ -54,7 +60,6 @@ namespace TimeStar_Terminations
                 DefaultValue = false
             };
             dataTable1.Columns.Add(column);
-
         }
         private void Panel3_MouseDown(object sender, MouseEventArgs e)
         {
@@ -105,16 +110,23 @@ namespace TimeStar_Terminations
 
                     //dataTable1.Rows.Clear();
                     dataTable1 = Utility.RefreshDataGrid(dataTable1);
-                    var column = new DataColumn("Select", typeof(bool))
+                    if (dataTable1.Rows.Count > 0)
                     {
-                        DefaultValue = false
-                    };
-                    dataTable1.Columns.Add(column);
+                        var column = new DataColumn("Select", typeof(bool))
+                        {
+                            DefaultValue = false
+                        };
+                        dataTable1.Columns.Add(column);
 
-                    dataGridView1.DataSource = dataTable1;
-                    dataGridView1.Sort(this.dataGridView1.Columns["ServerName"], ListSortDirection.Ascending);
-                    dataGridView1.Columns["ReadOnly"].ReadOnly = true;
-                    checkAll_chkBox.Visible = true;
+                        dataGridView1.DataSource = dataTable1;
+                        dataGridView1.Sort(this.dataGridView1.Columns["ServerName"], ListSortDirection.Ascending);
+                        dataGridView1.Columns["ReadOnly"].ReadOnly = true;
+                        checkAll_chkBox.Visible = true;
+                    }
+                    else { MessageBox.Show("No rows returned");
+                        AddColumns();
+                        dataGridView1.DataSource = dataTable1;
+                    }
                 }
                 catch (SecurityException ex)
                 {
@@ -185,19 +197,24 @@ namespace TimeStar_Terminations
         }
         void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
-            //Refresh DataGridView
-            if (rowcount > 0)
-            { 
-            var column = new DataColumn("Select", typeof(bool))
+            if (dataTable1.Rows.Count > 0)
             {
-                DefaultValue = false
-            };
-            dataTable1.Columns.Add(column);
+                var column = new DataColumn("Select", typeof(bool))
+                {
+                    DefaultValue = false
+                };
+                dataTable1.Columns.Add(column);
 
-            dataGridView1.DataSource = dataTable1;
-            dataGridView1.Sort(this.dataGridView1.Columns["ServerName"], ListSortDirection.Ascending);
-            checkAll_chkBox.Checked = false;
+                dataGridView1.DataSource = dataTable1;
+                dataGridView1.Sort(this.dataGridView1.Columns["ServerName"], ListSortDirection.Ascending);
+                checkAll_chkBox.Checked = false;
+            }
+            else
+            {
+                MessageBox.Show("No rows returned");
+                dataGridView1.DataSource = dataTable1;
+                AddColumns();
+                checkAll_chkBox.Checked = false;
             }
             progressBar1.MarqueeAnimationSpeed = 0;
             progressBar1.Style = ProgressBarStyle.Blocks;
@@ -205,6 +222,11 @@ namespace TimeStar_Terminations
 
             EnableButtons();
         }
+            //Refresh DataGridView
+            //if (rowcount > 0)
+            //{ 
+            
+        //}
 
         private void CheckAll_chkBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -228,13 +250,13 @@ namespace TimeStar_Terminations
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.Shift && e.KeyCode == Keys.D)
+            /*if (e.Control && e.Shift && e.KeyCode == Keys.D)
             {
                 // Write your code for what you want for this shortcut (Ctrl+N) here
                 readwrite_BTN.Visible = true;
                 setonline_BTN.Visible = true;
 
-            }
+            }*/
         }
 
         private void Readwrite_BTN_Click(object sender, EventArgs e)
